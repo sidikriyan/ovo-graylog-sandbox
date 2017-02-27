@@ -1,0 +1,15 @@
+
+- hosts: logserver
+  sudo: yes
+  roles:
+    - base
+    - mongodb
+    - openjdk
+    - elasticsearch
+    - graylog
+    - nginx
+  tasks:
+  - name: Install random UUID
+    apt: name=uuid-runtime state=present
+  - name: Ensure password random generator installed
+    apt: name=pwgen state=present

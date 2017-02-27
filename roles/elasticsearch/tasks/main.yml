@@ -1,0 +1,16 @@
+---
+
+- name: Add Elasticsearch repository key
+  apt_key: url="https://artifacts.elastic.co/GPG-KEY-elasticsearch" state=present
+
+- name: Add elasticsearch repository
+  apt_repository: repo="deb https://packages.elastic.co/elasticsearch/2.x/debian stable main" state=present
+
+- name: Ensure elasticsearch installed
+  apt: update_cache=yes name=elasticsearch state=present
+
+- name: Copy configuration templates to elasticsearch
+  copy: src=./templates/elasticsearch.j2 dest=/etc/elasticsearch/elasticsearch.yml
+
+- name: Applying all changes on elasticsearch
+  service: name=elasticsearch state=restarted

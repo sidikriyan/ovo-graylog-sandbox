@@ -1,0 +1,20 @@
+---
+
+- name: Get the packages
+  get_url: url=https://packages.graylog2.org/repo/packages/graylog-2.2-repository_latest.deb dest=/tmp/graylog-2.2-repository_latest.deb
+
+- name: Ensure graylog repo installed
+  apt: deb=/tmp/graylog-2.2-repository_latest.deb
+
+- name: Ensure graylog server installed
+  apt: update_cache=yes name=graylog-server state=present force=yes
+
+- name: Download graylog nginx content pack installed
+  get_url: url=https://raw.githubusercontent.com/Graylog2/graylog-contentpack-nginx/master/content_pack.json dest=/tmp/content_pack.json
+
+- name: Copy graylog server config
+  copy: src=./templates/server.j2 dest=/etc/graylog/server/server.conf
+
+- name: Ensure graylog started
+  service: name=graylog-server state=restarted
+

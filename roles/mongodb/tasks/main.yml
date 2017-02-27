@@ -1,0 +1,7 @@
+---
+
+- name: Ensure mongoDB installed
+  apt: name=mongodb-server state=present
+
+- name: Ensure mongoDB service started
+  service: name=mongodb state=restarted

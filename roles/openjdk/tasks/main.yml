@@ -1,0 +1,7 @@
+---
+
+- name: Adding PPA repository for openjdk
+  apt_repository: repo='ppa:openjdk-r/ppa'
+
+- name: Ensure openjdk installed
+  apt: update_cache=yes name=openjdk-8-jre-headless state=present

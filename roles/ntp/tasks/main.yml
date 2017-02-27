@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install NTP Package
+    apt: name=ntp update_cache=yes
+    sudo: yes
+
+  - name: Change Time Zone to UTC
+    shell: timedatectl set-timezone UTC
+    sudo: yes
+
+  - name: Ensure time sync once a day
+    template: src=ntpdate dest=/etc/cron.daily
+    sudo: yes
+
+  - name: Reload NTP Service
+    service: name=ntp state=restarted
+    sudo: yes

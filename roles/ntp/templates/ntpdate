@@ -1,0 +1,1 @@
+ntpdate -u 0.id.pool.ntp.org

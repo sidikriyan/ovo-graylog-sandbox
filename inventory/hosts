@@ -1,0 +1,6 @@
+[Development]
+vagrant ansible_ssh_port=2222 ansible_ssh_user=vagrant
+
+[logserver]
+#serundeng ansible_ssh_user=root
+vagrant ansible_ssh_port=2222 ansible_ssh_user=vagrant

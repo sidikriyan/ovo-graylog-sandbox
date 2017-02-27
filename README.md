@@ -1,0 +1,1 @@
+# ovo-graylog-ansible

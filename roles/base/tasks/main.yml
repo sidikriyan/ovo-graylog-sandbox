@@ -1,0 +1,7 @@
+---
+
+- name: Ensure GIT installed
+  apt: name=git state=present
+
+- name: Ensure APT over HTTPS supported
+  apt: name=apt-transport-https state=present
