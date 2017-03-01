@@ -13,8 +13,7 @@
   get_url: url=https://raw.githubusercontent.com/Graylog2/graylog-contentpack-nginx/master/content_pack.json dest=/tmp/content_pack.json
 
 - name: Copy graylog server config
-  copy: src=./templates/server.j2 dest=/etc/graylog/server/server.conf
+  template: src=templates/server.j2 dest=/etc/graylog/server/server.conf
 
 - name: Ensure graylog started
   service: name=graylog-server state=restarted
-

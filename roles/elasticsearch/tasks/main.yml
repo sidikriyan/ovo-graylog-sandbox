@@ -10,7 +10,7 @@
   apt: update_cache=yes name=elasticsearch state=present
 
 - name: Copy configuration templates to elasticsearch
-  copy: src=./templates/elasticsearch.j2 dest=/etc/elasticsearch/elasticsearch.yml
+  template: src=templates/elasticsearch.j2 dest=/etc/elasticsearch/elasticsearch.yml
 
 - name: Applying all changes on elasticsearch
   service: name=elasticsearch state=restarted
