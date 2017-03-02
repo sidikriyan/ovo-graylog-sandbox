@@ -7,7 +7,7 @@
   apt: update_cache=yes name=nginx state=present
 
 - name: Copy nginx config with logging capabilities to graylog server
-  copy: src=./templates/nginx.j2 dest=/etc/nginx/nginx.conf
+  template: src=templates/nginx.j2 dest=/etc/nginx/nginx.conf
 
 - name: Ensure nginx service running
   service: name=nginx state=restarted
