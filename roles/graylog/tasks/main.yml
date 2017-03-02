@@ -17,3 +17,9 @@
 
 - name: Ensure graylog started
   service: name=graylog-server state=restarted
+
+- name: Download slack alarm callback
+  get_url: url=https://github.com/Graylog2/graylog-plugin-slack/releases/download/2.4.0/graylog-plugin-slack-2.4.0.jar dest=/usr/share/graylog-server/plugin/
+
+- name: Download telegram alarm callback
+  get_url: url=https://github.com/Somewater/TelegramAlarmCallback/releases/download/v1.0.0/telegram-alarm-callback-1.0.0.jar dest=/usr/share/graylog-server/plugin/
