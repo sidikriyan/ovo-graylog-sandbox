@@ -1,0 +1,13 @@
+[Unit]
+Description=Amon
+After=network.target
+
+[Service]
+Type=simple
+User=amon
+Group=amon
+WorkingDirectory=/opt/amon/
+ExecStart=/opt/amon/env/bin/gunicorn wsgi -c /opt/amon/gunicorn.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+- name: Install Python 2
+  hosts: amonserver
+  gather_facts: False
+  pre_tasks:
+    - raw: sudo apt -y update && sudo apt install -y python-minimal python-pip
+
+- hosts: amonserver
+  sudo: yes
+  roles:
+    - base
+    - nginx
+    - mongodb
+    - amonserver
+
+  tasks:
+  - name: Install random UUID
+    apt: name=uuid-runtime state=present
+  - name: Ensure password random generator installed
+    apt: name=pwgen state=present

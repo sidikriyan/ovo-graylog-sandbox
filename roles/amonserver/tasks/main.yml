@@ -1,0 +1,94 @@
+  # Install all required dependecies  
+  - name: Install Dependencies for amonserver
+    apt: name={{ item }} state=present
+    with_items:
+    - python3-pip
+    - python3-dev
+    - python3-venv
+    - gcc
+    - libyaml-dev
+    - libev-dev
+    - git
+
+  # Create the amon group
+  - name: Create amon group
+    group: 
+      name: amon
+      state: present
+
+  # Create the amon user
+  - name: Create amon user
+    user:
+      name: amon
+      createhome: no
+      system: yes
+      state: present
+      group: amon
+      shell: /bin/false
+      home: /etc/opt/amon
+
+  # Create the directories where you are going to store the configs, logs and Amon itself
+  - name: Create directories to store the configs, logs and Amon itself
+    file: path={{ item }} state=directory group=amon owner=amon recurse=yes
+    with_items:
+      - /opt/amon
+      - /var/log/amon
+      - /etc/opt/amon
+
+  # Clone amon repo on github
+  - name: clone amon repo
+    git:
+      dest: "/opt/amon"
+      repo: "https://github.com/amonapp/amon.git"
+      update: yes
+      clone: yes
+      force: yes
+      version: master
+
+  # Create directory for Python environment for the Amon dependecies
+  - name: Create directory for Python environment
+    file: path=/opt/amon/env/ state=directory group=amon owner=amon
+
+  # Command to create python environment
+  - name: create environment for python
+    command: "/usr/bin/python3 -m venv /opt/amon/env/"
+
+  # Activate the environment
+  - name: activate the environment
+    shell: "source /opt/amon/env/bin/activate"
+
+  # Activate the environment
+  - name: activate the environment
+    command: "/opt/amon/env/bin/pip install -r /opt/amon/requirements.txt"
+
+  - name: copy amon config
+    template: src=templates/amon.yml.j2 dest=/etc/opt/amon/amon.yml
+
+  - name: execute command migrate
+    command: "/opt/amon/env/bin/python /opt/amon/manage.py migrate"
+
+  - name: change owner directories to store the configs, logs and Amon itself
+    file: path={{ item }} state=directory group=amon owner=amon recurse=yes
+    with_items:
+      - /opt/amon
+      - /var/log/amon
+      - /etc/opt/amon
+
+  # Alert sending / Cloud Sync / Agent no data sent cron tasks
+  - name: Alert sending / Cloud Sync / Agent no data sent cron tasks
+    command: "/opt/amon/env/bin/python /opt/amon/manage.py installtasks"
+    args:
+      chdir: /opt/amon
+    become: true
+    become_user: amon
+  
+  # To test if Amon is configured properly
+  #- name: test if Amon is configured properly
+   # command: "/opt/amon/env/bin/python /opt/amon/manage.py runserver"
+
+  #To ensure that the service start up on reboots
+  - name: ensure that the service start up on reboots
+    template: src=templates/amon.service.j2 dest=/etc/systemd/system/amon.service
+
+  - name: Make sure a service is running
+    systemd: state=started name=amon
